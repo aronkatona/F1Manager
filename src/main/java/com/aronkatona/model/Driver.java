@@ -37,6 +37,12 @@ public class Driver {
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="drivers")
 	private List<User> users;
 	
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="resultOfDrivers")
+	private List<Race> races;
+	
+	
+	
 	public List<User> getUsers() {
 		return users;
 	}

@@ -37,6 +37,12 @@ public class User {
 	@JoinColumn(name="userDriver_id")
 	private List<Driver> drivers;
 	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="raceUser_id")
+	private List<Race> races;
+	
+	
+	
 	
 	
 	
@@ -95,6 +101,16 @@ public class User {
 	public List<Driver> getDrivers(){
 		return drivers;
 	}
+	
+	
+	public List<Race> getRaces() {
+		return races;
+	}
+
+	public void setRaces(List<Race> races) {
+		this.races = races;
+	}
+
 	@Override
 	public String toString(){
 		return "id="+id+", name="+name+", money="+money+",  points="+points;

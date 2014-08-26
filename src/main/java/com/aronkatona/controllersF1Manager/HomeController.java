@@ -1,6 +1,6 @@
 package com.aronkatona.controllersF1Manager;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.aronkatona.model.Driver;
+import com.aronkatona.model.Race;
 import com.aronkatona.model.Team;
 import com.aronkatona.model.User;
 import com.aronkatona.service.DriverService;
+import com.aronkatona.service.RaceService;
 import com.aronkatona.service.TeamService;
 import com.aronkatona.service.UserService;
 
@@ -28,6 +30,7 @@ public class HomeController {
 	private DriverService driverService;
 	private TeamService teamService;
 	private UserService userService;
+	private RaceService raceService;
 	
 	@Autowired(required = true)
 	@Qualifier(value = "driverService")
@@ -45,6 +48,12 @@ public class HomeController {
 	@Qualifier(value = "userService")
 	public void setUserService(UserService us) {
 		this.userService = us;
+	}
+	
+	@Autowired(required = true)
+	@Qualifier(value = "raceService")
+	public void setRaceService(RaceService rs) {
+		this.raceService = rs;
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -75,13 +84,26 @@ public class HomeController {
 		this.driverService.addDriver(driver2);*/
 		
 
+		/*Race race = new Race();
+		race.setDate(new Date(System.currentTimeMillis() + 1000000));
+		race.setLocation("hungaroring");
+		this.raceService.addRace(race);
+		Race race1 = new Race();
+		race1.setDate(new Date(System.currentTimeMillis() + 1000000));
+		race1.setLocation("interlagos");
+		this.raceService.addRace(race1);*/
 		
+		//usernek volt race
+		//racenek van drivere
+		
+	    Race race = this.raceService.getRaceById(2);
+	    int tmp = 0;
+	    System.out.println("interlagos nagydij!!");
+	    for(Driver d: race.getResultOfDrivers()){
+	    	
+	    	System.out.println(++tmp + ". helyezet: "+d.getName());
+	    }
 
-		
-		
-		
-
-		
 		
 		return "redirect:/";
 	}

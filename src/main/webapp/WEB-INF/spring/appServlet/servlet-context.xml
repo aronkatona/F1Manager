@@ -57,6 +57,7 @@
 				<beans:value>com.aronkatona.model.Driver</beans:value>
 				<beans:value>com.aronkatona.model.Team</beans:value>
 				<beans:value>com.aronkatona.model.User</beans:value>
+				<beans:value>com.aronkatona.model.Race</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">
@@ -92,6 +93,14 @@
 	</beans:bean>
 	<beans:bean id="userService" class="com.aronkatona.service.UserServiceImpl">
 		<beans:property name="userDAO" ref="userDAO"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="raceDAO" class="com.aronkatona.dao.RaceDAOImpl">
+		<beans:property name="sessionFactory"
+			ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+	<beans:bean id="raceService" class="com.aronkatona.service.RaceServiceImpl">
+		<beans:property name="raceDAO" ref="raceDAO"></beans:property>
 	</beans:bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
