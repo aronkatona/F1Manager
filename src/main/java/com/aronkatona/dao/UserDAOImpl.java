@@ -7,11 +7,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.aronkatona.model.Driver;
+import com.aronkatona.model.User;
 import com.aronkatona.model.Team;
 
 @Repository
-public class DriverDAOImpl implements DriverDAO {
+public class UserDAOImpl implements UserDAO {
 	
 
 	private SessionFactory sessionFactory;
@@ -21,48 +21,47 @@ public class DriverDAOImpl implements DriverDAO {
 	}
 
 	@Override
-	public void addDriver(Driver d) {
+	public void addUser(User u) {
 		Session session = this.sessionFactory.getCurrentSession();
-		session.persist(d);
+		session.persist(u);
 	}
 
 	@Override
-	public void updateDriver(Driver d) {
+	public void updateUser(User u) {
 		Session session = this.sessionFactory.getCurrentSession();
-		session.update(d);
+		session.update(u);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Driver> listDrivers() {
+	public List<User> listUsers() {
 		Session session = this.sessionFactory.getCurrentSession();
-		List<Driver> driversList = session.createQuery("from Driver").list();
-		return driversList;
+		List<User> usersList = session.createQuery("from User").list();
+		return usersList;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Driver> listDriversByTeamName(String teamName){
+	public List<User> listUsersByTeamName(String teamName){
 		Session session = this.sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Driver where team_id = (select id from Team where name = :teamName)");
+		Query query = session.createQuery("from User where team_id = (select id from Team where name = :teamName)");
 		query.setParameter("teamName", teamName);
 		return query.list();		
 	}
 
 	@Override
-	public Driver getDriverById(int id) {
+	public User getUserById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();		
-		Driver d = (Driver) session.get(Driver.class, new Integer(id));
-
-		return d;
+		User u = (User) session.get(User.class, new Integer(id));
+		return u;
 	}
 
 	@Override
-	public void removeDriver(int id) {
+	public void removeUser(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Driver d = (Driver) session.get(Driver.class, new Integer(id));
-		if(d != null){
-			session.delete(d);
+		User u = (User) session.get(User.class, new Integer(id));
+		if(u != null){
+			session.delete(u);
 		}
 	}
 

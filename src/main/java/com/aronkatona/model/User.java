@@ -11,13 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
 @Entity
-@Table(name="DRIVER")
-public class Driver {
+@Table(name="USER")
+public class User {
 
 	@Id
 	@Column(name="id")
@@ -26,38 +25,32 @@ public class Driver {
 	
 	private String name;
 	
-	private int price;
+	private int money;
 	
 	private int points;
 	
-	@ManyToOne
-	@JoinColumn(name="team_id")
-	private Team team;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="userTeam_id")
+	private List<Team> team;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="drivers")
-	private List<User> users;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="userDriver_id")
+	private List<Driver> drivers;
 	
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public Driver(){
+	
+	
+	
+	public User(){
 		
 	}
 	
-	public Driver(String name, int price, int points){
+	public User(String name, int money, int points){
 		this.name = name;
-		this.price = price;
+		this.money = money;
 		this.points = points;
 	}
+	
+
 
 	public int getId() {
 		return id;
@@ -75,27 +68,35 @@ public class Driver {
 		this.name = name;
 	}
 
-	public void setPrice(int price){
-		this.price = price;
+	public void setMoney(int money){
+		this.money = money;
 	}
 	
-	public int getPrice(){
-		return price;
+	public int getMoney(){
+		return money;
 	}
 	
 	public void setPoints(int points){
 		this.points = points;
 	}
 	
-	public void setTeam(Team team){
+	public void setTeam(List<Team> team){
 		this.team = team;
 	}
 	
-	public Team getTeam(){
+	public List<Team> getTeam(){
 		return team;
+	}
+	
+	public void setDrivers(List<Driver> drivers){
+		this.drivers = drivers;
+	}
+	
+	public List<Driver> getDrivers(){
+		return drivers;
 	}
 	@Override
 	public String toString(){
-		return "id="+id+", name="+name+", price="+price+",  points="+points;
+		return "id="+id+", name="+name+", money="+money+",  points="+points;
 	}
 } 
