@@ -1,5 +1,6 @@
 package com.aronkatona.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,35 +15,43 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name="DRIVER")
+@Table(name = "DRIVER")
 public class Driver {
 
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	private String name;
-	
+
 	private int price;
-	
+
 	private int points;
-	
+
 	@ManyToOne
-	@JoinColumn(name="team_id")
+	@JoinColumn(name = "team_id")
 	private Team team;
-	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="drivers")
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "drivers")
 	private List<User> users;
-	
-	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="resultOfDrivers")
+
+	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "resultOfDrivers")
 	private List<Race> races;
-	
-	
-	
+
+	public Driver() {
+
+	}
+
+	public Driver(String name, int price, int points) {
+		this.name = name;
+		this.price = price;
+		this.points = points;
+		this.users = new ArrayList<>();
+		this.races = new ArrayList<>();
+	}
+
 	public List<User> getUsers() {
 		return users;
 	}
@@ -53,16 +62,6 @@ public class Driver {
 
 	public int getPoints() {
 		return points;
-	}
-
-	public Driver(){
-		
-	}
-	
-	public Driver(String name, int price, int points){
-		this.name = name;
-		this.price = price;
-		this.points = points;
 	}
 
 	public int getId() {
@@ -81,27 +80,29 @@ public class Driver {
 		this.name = name;
 	}
 
-	public void setPrice(int price){
+	public void setPrice(int price) {
 		this.price = price;
 	}
-	
-	public int getPrice(){
+
+	public int getPrice() {
 		return price;
 	}
-	
-	public void setPoints(int points){
+
+	public void setPoints(int points) {
 		this.points = points;
 	}
-	
-	public void setTeam(Team team){
+
+	public void setTeam(Team team) {
 		this.team = team;
 	}
-	
-	public Team getTeam(){
+
+	public Team getTeam() {
 		return team;
 	}
+
 	@Override
-	public String toString(){
-		return "id="+id+", name="+name+", price="+price+",  points="+points;
+	public String toString() {
+		return "id=" + id + ", name=" + name + ", price=" + price
+				+ ",  points=" + points;
 	}
-} 
+}

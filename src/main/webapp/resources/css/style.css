@@ -1,0 +1,92 @@
+div.all{
+width: 100%;
+height: auto;
+margin: 0 auto;
+background-color: #C8C8C8;
+}
+
+div.welcomeText{
+height: 30%;
+background-color: #99FF66;
+}
+
+#contactdiv{ 
+    opacity:0.92; 
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    display: none;
+}
+
+#onclick{
+   padding:3px;
+   color:green;
+   cursor:pointer;
+	padding:5px 5px 5px 15px;
+   width:70px;
+   color:white;
+   background-color:#123456;
+   box-shadow:1px 1px 5px grey;
+   border-radius:3px;
+}
+
+#contact{   
+    width:350px;
+    margin:0px;
+    background-color:white;
+    font-family: 'Fauna One', serif;
+    position: relative;
+    border: 5px solid rgb(90, 158, 181);
+}
+.img{
+    float: right;
+    margin-top: -35px;
+    margin-right: -37px;
+}
+
+#contact{
+    left: 50%;
+    top: 50%;
+    margin-left:-210px;
+    margin-top:-255px;
+}
+
+#popup{
+    padding-top:80px;
+}
+.form{
+    border-radius:2px;
+    padding:20px 30px;
+    box-shadow:0 0 15px;
+    font-size:14px;
+    font-weight:bold;
+    width:350px;
+    margin:20px 250px 0 35px;
+    float:left;
+}
+
+td.menu{
+height: 40%;
+text-align: center;
+vertical-align: bottom;
+width: 33%;
+background-color: #007fb2;
+font-size: 30px;
+color: white;
+}
+
+a.menuLink{
+text-decoration: none;
+color: white;
+}
+
+a.menuLink:visited{
+color: white;
+}
+
+a.menuLink:hover{
+color: red;
+}

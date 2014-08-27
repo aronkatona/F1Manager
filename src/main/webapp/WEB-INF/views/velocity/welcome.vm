@@ -1,0 +1,48 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<meta http-equiv="content-language" content="hu">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="./resources/js/jquery_popup.js"></script>
+<link href="./resources/css/style.css" rel="stylesheet" type="text/css" >
+	<title>F1 Manager</title>
+</head>
+<body>
+<div class = "all">
+
+	<table class = "top" style="width:100%">
+		<tr style="height:80%">
+			<td colspan="2"> nextRace </td>
+			<td> <p id="onclick">Login</p> </td>
+		</tr>
+		<tr>
+			<td class = "menu"><b><a class = "menuLink" href="welcome.html">Home</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="profil.html">Profile</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="races.html">Race</a></b></td>
+		</tr>
+	</table>
+	
+	
+                
+               
+	
+	
+	<!--Contact Form -->
+        <div id="contactdiv">
+            <form class="form" action = "/controllersF1Manager/login" method="get" id="contact">
+                <img src="./resources/button_cancel.png" class="img" id="cancel"/>	
+                <h3>Login</h3>
+                <hr/><br/>
+                <label>Name: </label>
+                <br/>
+                <input type="text" id="username" name="nameOfUser" placeholder="Name"/><br/>           
+                <input type="submit" id="login" value="Login"/>
+                <input type="button" id="cancel" value="Cancel"/>
+                <br/>
+            </form>
+        </div>
+	
+</div>
+
+</body>
+</html>

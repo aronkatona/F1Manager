@@ -19,7 +19,9 @@ teams:   id
 
 races:   id
 		 date
-		  
+		 users
+		 re
+		 
 leagues:  id
 		  name
 		  drivers

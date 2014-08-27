@@ -12,5 +12,4 @@ public interface DriverService {
 	public Driver getDriverById(int id);
 	public void removeDriver(int id);
 	public List<Driver> listDriversByTeamName(String teamName);
-	
 } 

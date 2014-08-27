@@ -9,8 +9,8 @@
 
 <P>  The time on the server is $asd. </P>
 
-<a href="/controllersF1Manager/addDriver">add Driver </a></br>
-<a href="/controllersF1Manager/addTeam">add Team </a></br>
-<a href="/controllersF1Manager/getDriversByTeam">list driver by id:1 </a>
+<a href="/controllersF1Manager/addDriversTeamsToRace">add DriversTeams to Race </a></br>
+<a href="/controllersF1Manager/addTeamDriverRace">add TeamDriverRace </a></br>
+<a href="/controllersF1Manager/sizeOfLists">size of lists </a></br>
 </body>
 </html>

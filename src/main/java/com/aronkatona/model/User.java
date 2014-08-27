@@ -1,5 +1,6 @@
 package com.aronkatona.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -54,6 +55,9 @@ public class User {
 		this.name = name;
 		this.money = money;
 		this.points = points;
+		this.team = new ArrayList<>();
+		this.drivers = new ArrayList<>();
+		this.races = new ArrayList<>();
 	}
 	
 

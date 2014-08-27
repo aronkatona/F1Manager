@@ -25,12 +25,28 @@ public class Team {
 	
 	private String name;
 	
+	private int points;
+	
+	private int price;
+	
 	@OneToMany(mappedBy="team")
 	private List<Driver> drivers;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="team")
 	private List<User> users;
 	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="resultOfTeams")
+	private List<Race> races;
+	
+	
+	public Team(){
+		
+	}
+	
+	public Team(String name, int price){
+		this.name = name;
+		this.price = price;
+	}
 	
 	public List<User> getUsers() {
 		return users;
@@ -39,8 +55,7 @@ public class Team {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
-
-	private int points;
+	
 
 	public int getId() {
 		return id;
@@ -66,6 +81,16 @@ public class Team {
 		return points;
 	}
 	
+	
+	
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
 	@Override
 	public String toString(){
 		return "id="+id+", name="+name+",  points="+points;

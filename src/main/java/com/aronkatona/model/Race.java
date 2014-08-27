@@ -1,5 +1,6 @@
 package com.aronkatona.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,12 +33,26 @@ public class Race {
 	private List<User> users;
 	
 	//pilotak eredmenye
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany( fetch = FetchType.EAGER)
 	@JoinColumn(name="resultOfDrivers_id")
 	private List<Driver> resultOfDrivers;
 	
 	//csapatok helyezese
-	//private List<Team> resultOfTeams;
+	@ManyToMany( fetch = FetchType.EAGER)
+	@JoinColumn(name="resultOfTeam_id")
+	private List<Team> resultOfTeams;
+	
+	public Race(){
+		
+	}
+	
+	public Race(String location, Date date){
+		this.location = location;
+		this.date = date;
+		this.users = new ArrayList<>();
+		this.resultOfDrivers = new ArrayList<>();
+		this.resultOfTeams = new ArrayList<>();
+	}
 	
 	public int getId() {
 		return id;
@@ -79,13 +94,16 @@ public class Race {
 		this.resultOfDrivers = resultOfDrivers;
 	}
 
-	/*public List<Team> getResultOfTeams() {
+	public List<Team> getResultOfTeams() {
 		return resultOfTeams;
 	}
 
 	public void setResultOfTeams(List<Team> resultOfTeams) {
 		this.resultOfTeams = resultOfTeams;
-	}*/
+	}
+
+
+
 	
 
 }
