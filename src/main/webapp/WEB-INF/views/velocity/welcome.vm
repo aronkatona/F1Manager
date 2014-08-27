@@ -13,11 +13,32 @@
 	<table class = "top" style="width:100%">
 		<tr style="height:80%">
 			<td colspan="2"> nextRace </td>
-			<td> <p id="onclick">Login</p> </td>
+			<td> 
+			#if(!$successLogin && !$notSuccessLogin) ##alapeset
+			<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
+				#if($successSignup == "successSignup")
+					<font color="red">sikeres regisztracio</font>
+				#end
+				#if($notSuccessSignup == "notSuccessSignup")
+					<font color="red">mar van ilyen user, sry</font>
+				#end
+				</td>
+			#end
+			#if ($successLogin == "successLogin") ##sikeres belepes
+			Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+			#end
+			#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
+			Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+			#end
+			#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
+				<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>nincs ilyen user</td> 
+			#end
+			
+			
 		</tr>
 		<tr>
 			<td class = "menu"><b><a class = "menuLink" href="welcome.html">Home</a></b></td>
-			<td class = "menu"><b><a class = "menuLink" href="profil.html">Profile</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="profile.html">Profile</a></b></td>
 			<td class = "menu"><b><a class = "menuLink" href="races.html">Race</a></b></td>
 		</tr>
 	</table>
@@ -37,6 +58,21 @@
                 <br/>
                 <input type="text" id="username" name="nameOfUser" placeholder="Name"/><br/>           
                 <input type="submit" id="login" value="Login"/>
+                <input type="button" id="cancel" value="Cancel"/>
+                <br/>
+            </form>
+        </div>
+        
+        <!--Signup Form -->
+        <div id="signupdiv">
+            <form class="form" action = "/controllersF1Manager/signup" method="get" id="register">
+                <img src="./resources/button_cancel.png" class="img" id="cancel"/>	
+                <h3>Signup</h3>
+                <hr/><br/>
+                <label>Name: </label>
+                <br/>
+                <input type="text" id="yourname" name="nameOfUser" placeholder="Name"/><br/>           
+                <input type="submit" id="signup" value="Signup"/>
                 <input type="button" id="cancel" value="Cancel"/>
                 <br/>
             </form>

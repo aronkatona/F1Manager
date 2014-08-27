@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -60,24 +62,91 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/welcome")
-	public String welcome(Model model){
+	public String welcome(Model model,HttpSession session){
+		
+		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
+			model.addAttribute("notSuccessLogin", "alreadyLoggedin");
+			model.addAttribute("userName", session.getAttribute("userName"));
+			return "welcome";
+		}
+		
 		return "welcome";
 	}
 	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public String login(Model model,@RequestParam Map<String,String> reqPar){
-		String nameOfUser = reqPar.get("nameOfUser");
-		System.out.println(nameOfUser);
+	public String login(Model model,@RequestParam Map<String,String> reqPar,HttpSession session){
+		
+		String nameOfUser = reqPar.get("nameOfUser");	
+		boolean success = false;
+		User user = null;
+		for(User u : this.userService.listUsers()){
+			if(u.getName().equals(nameOfUser)){
+				user = u;
+				success = true;
+				break;
+			}
+		}
+		
+		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
+		model.addAttribute("notSuccessLogin", "alreadyLoggedin");
+		return "welcome";
+		}
+		
+		if(success){
+			session.setAttribute("userName", user.getName());
+			model.addAttribute("successLogin", "successLogin");
+			model.addAttribute("userName", user.getName());
+			return "welcome";
+		} 
+		else{
+			model.addAttribute("notSuccessLogin","notSuccessLogin");
+			return "welcome";
+		}	
+	}
+	
+	@RequestMapping(value="/logout")
+	public String logout(Model model, HttpSession session){
+		session.setAttribute("userName", "");
 		return "welcome";
 	}
+	
+	@RequestMapping(value="/signup", method = RequestMethod.GET)
+	public String signup(Model model, HttpSession session,@RequestParam Map<String,String> reqPar){
+		String nameOfUser = reqPar.get("nameOfUser");	
 
+		boolean success = true;
+		for(User u : this.userService.listUsers()){
+			if(u.getName().equals(nameOfUser)){
+				success = false;
+				break;
+			}
+		}
+		
+		if(success){
+			User user = new User(nameOfUser, 890, 0);
+			this.userService.addUser(user);
+			model.addAttribute("successSignup", "successSignup");
+			return "welcome";
+		}
+		else{
+			model.addAttribute("notSuccessSignup", "notSuccessSignup");
+			return "welcome";
+		}
+		
+	}
+
+	
+	/*************************************************
+	 * 
+	 * DB-hez 
+	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Locale locale, Model model) {
 		System.out.println("index");
 		model.addAttribute("asd", "morning");
 		return "index";
 	}
-
+	
 	@RequestMapping(value = "/addDriversTeamsToRace")
 	public String addDriversTeamsToRace(Model model) {
 		

@@ -21,7 +21,42 @@ background-color: #99FF66;
     display: none;
 }
 
+#signupdiv{ 
+    opacity:0.92; 
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    display: none;
+}
+
 #onclick{
+   padding:3px;
+   color:green;
+   cursor:pointer;
+	padding:5px 5px 5px 15px;
+   width:70px;
+   color:white;
+   background-color:#123456;
+   box-shadow:1px 1px 5px grey;
+   border-radius:3px;
+}
+
+#onclickSignup{
+   padding:3px;
+   color:green;
+   cursor:pointer;
+	padding:5px 5px 5px 15px;
+   width:70px;
+   color:white;
+   background-color:#123456;
+   box-shadow:1px 1px 5px grey;
+   border-radius:3px;
+}
+
+#logoutclick{
    padding:3px;
    color:green;
    cursor:pointer;
@@ -48,6 +83,27 @@ background-color: #99FF66;
 }
 
 #contact{
+    left: 50%;
+    top: 50%;
+    margin-left:-210px;
+    margin-top:-255px;
+}
+
+#register{   
+    width:350px;
+    margin:0px;
+    background-color:white;
+    font-family: 'Fauna One', serif;
+    position: relative;
+    border: 5px solid rgb(90, 158, 181);
+}
+.img{
+    float: right;
+    margin-top: -35px;
+    margin-right: -37px;
+}
+
+#register{
     left: 50%;
     top: 50%;
     margin-left:-210px;
