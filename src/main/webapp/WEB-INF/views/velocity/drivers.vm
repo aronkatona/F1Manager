@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<meta http-equiv="content-language" content="hu">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="./resources/js/jquery_drivers.js"></script>
+<link href="./resources/css/style.css" rel="stylesheet" type="text/css" >
+	<title>F1 Manager</title>
+</head>
+<body>
+<div class = "all">
+
+	<table class = "top" style="width:100%">
+		<tr style="height:80%">
+			<td colspan="2"> $nextRaceDate </td>
+			<td> 
+			#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
+			<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
+				#if($successSignup == "successSignup")
+					<font color="red">sikeres regisztracio</font>
+				#end
+				#if($notSuccessSignup == "notSuccessSignup")
+					<font color="red">mar van ilyen user, sry</font>
+				#end
+				</td>
+			#end
+			#if ($successLogin == "successLogin") ##sikeres belepes
+			Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+			#end
+			#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
+			Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+			#end
+			#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
+				<font id="onclick">Login</font> <font id="onclickSignup">Signup</font><font color="red">nincs ilyen user,vagy rossz jelszo</font></td> 
+			#end
+			
+			
+		</tr>
+		<tr>
+			<td class = "menu"><b><a class = "menuLink" href="welcome">Home</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="profile">Profile</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="drivers">Drivers</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="teams">Teams</a></b></td>
+		</tr>
+	</table>
+	
+	<p id="driverList">pilotak</p>
+	
+<table id="driverTable"> 
+	<thead> 
+		<tr>  
+    		<th>Name</th> 
+    		<th>Price</th> 
+    		<th>Points</th> 
+    		#if($buyDriver == "buyDriver")
+    		<th>Buy</th>
+    		#end
+		</tr> 
+	</thead> 
+	<tbody> 
+		#foreach($driver in $driverList)
+			<tr>
+				<td>$driver.getName()</td>
+				<td>$driver.getPrice()</td>
+				<td>$driver.getPoints()</td>
+				#if($buyDriver == "buyDriver")
+				<td><a color = "green" href="buyingDriver.$driver.getId()">megveszem</a></td>
+				#end
+			</tr>
+		#end
+	</tbody> 
+</table> 
+	
+</div>
+
+</body>
+</html>

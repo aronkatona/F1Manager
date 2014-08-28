@@ -1,20 +1,23 @@
 package com.aronkatona.controllersF1Manager;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.aronkatona.model.Driver;
 import com.aronkatona.model.Race;
@@ -27,6 +30,7 @@ import com.aronkatona.service.UserService;
 
 
 @Controller
+@SessionAttributes("notSuccessLogin")
 public class HomeController {
 
 	// private static final Logger logger =
@@ -66,6 +70,7 @@ public class HomeController {
 		
 		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
 			model.addAttribute("notSuccessLogin", "alreadyLoggedin");
+			session.setAttribute("notSuccessLogin", "alreadyLoggedin");
 			model.addAttribute("userName", session.getAttribute("userName"));
 			return "welcome";
 		}
@@ -77,10 +82,11 @@ public class HomeController {
 	public String login(Model model,@RequestParam Map<String,String> reqPar,HttpSession session){
 		
 		String nameOfUser = reqPar.get("nameOfUser");	
+		String password = reqPar.get("passwordOfUser");
 		boolean success = false;
 		User user = null;
 		for(User u : this.userService.listUsers()){
-			if(u.getName().equals(nameOfUser)){
+			if(u.getName().equals(nameOfUser) && u.getPassword().equals(password)){
 				user = u;
 				success = true;
 				break;
@@ -88,32 +94,54 @@ public class HomeController {
 		}
 		
 		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
-		model.addAttribute("notSuccessLogin", "alreadyLoggedin");
-		return "welcome";
+			model.addAttribute("notSuccessLogin", "alreadyLoggedin");
+			session.setAttribute("notSuccessLogin", "alreadyLoggedin");
+			//if(page.equals("welcome"))	return "welcome";
+			//if(page.equals("profile")) return "profile";
+			return "welcome";
 		}
 		
 		if(success){
 			session.setAttribute("userName", user.getName());
-			model.addAttribute("successLogin", "successLogin");
 			model.addAttribute("userName", user.getName());
+			model.addAttribute("successLogin", "successLogin");
+			session.setAttribute("successLogin", "successLogin");
+			
+			//if(page.equals("welcome"))	return "welcome";
+			//if(page.equals("profile")) return "profile";
 			return "welcome";
 		} 
 		else{
 			model.addAttribute("notSuccessLogin","notSuccessLogin");
+			session.setAttribute("notSuccessLogin","notSuccessLogin");
+		//	if(page.equals("welcome"))	return "welcome";
+		//	if(page.equals("profile")) return "profile";
 			return "welcome";
 		}	
+		
 	}
 	
 	@RequestMapping(value="/logout")
 	public String logout(Model model, HttpSession session){
+		session.setAttribute("successLogin", "");
+		session.setAttribute("notSuccessLogin", "");
+		session.setAttribute("notSuccessSignup", "");
 		session.setAttribute("userName", "");
+		model.addAttribute("successLogin", "");
+		model.addAttribute("notSuccessLogin", "");
+		model.addAttribute("notSuccessSignup", "");
+		
+		//if(page.equals("welcome"))	return "welcome";
+		//if(page.equals("profile")) return "profile";
 		return "welcome";
 	}
 	
 	@RequestMapping(value="/signup", method = RequestMethod.GET)
 	public String signup(Model model, HttpSession session,@RequestParam Map<String,String> reqPar){
-		String nameOfUser = reqPar.get("nameOfUser");	
 
+		String nameOfUser = reqPar.get("nameOfUser");	
+		String password = reqPar.get("passwordOfUser");
+		System.out.println(password);
 		boolean success = true;
 		for(User u : this.userService.listUsers()){
 			if(u.getName().equals(nameOfUser)){
@@ -123,8 +151,13 @@ public class HomeController {
 		}
 		
 		if(success){
-			User user = new User(nameOfUser, 890, 0);
+			User user = new User(nameOfUser,password);
 			this.userService.addUser(user);
+			model.addAttribute("successLogin","");
+			model.addAttribute("notSuccessLogin", "");
+			model.addAttribute("successSignup", "successSignup");
+			model.addAttribute("successLogin","");
+			model.addAttribute("notSuccessLogin", "");
 			model.addAttribute("successSignup", "successSignup");
 			return "welcome";
 		}
@@ -136,6 +169,171 @@ public class HomeController {
 	}
 
 	
+	@ModelAttribute
+	public Date raceTime(Model model){
+		Date actDate = new Date();
+		
+		for(Race r : this.raceService.listRaces()){
+			if(r.getDate().after(actDate)){
+				DateTime date1 = new DateTime(actDate);
+				DateTime date2 = new DateTime(r.getDate());
+				Seconds seconds = Seconds.secondsBetween( date1, date2);
+				model.addAttribute("nextRaceDate", seconds.getSeconds() );
+				break;
+			}
+		}
+		return null;
+	}
+	
+	@RequestMapping(value="/profile")
+	public String profile(Model model, HttpSession session){
+		
+		
+		if(session.getAttribute("userName") == null || session.getAttribute("userName").equals("")){
+			model.addAttribute("firstLogin", "firstLogin");
+			return "profile";
+		}
+		else{
+			
+			User user = null;
+			for(User u : this.userService.listUsers()){
+				if(u.getName().equals(session.getAttribute("userName"))){
+					user = u;
+					break;
+				}
+			}
+			
+			model.addAttribute("userName", user.getName());
+			model.addAttribute("yourMoney", user.getMoney());
+			model.addAttribute("yourPoints", user.getPoints());
+			model.addAttribute("yourDrivers", user.getDrivers());
+			model.addAttribute("yourTeams", user.getTeam());
+			return "profile";
+		}
+		
+	}
+	
+	@RequestMapping(value="/drivers")
+	public String drivers(Model model,HttpSession session){
+		model.addAttribute("buyDriver",session.getAttribute("buyDriver"));
+		session.setAttribute("buyDriver", "");
+		model.addAttribute("driverList", this.driverService.listDrivers());
+		return "drivers";
+	}
+	
+	@RequestMapping(value="/teams")
+	public String teams(Model model){
+		model.addAttribute("teamList", this.teamService.listTeams());
+		return "teams";
+	}
+	
+	@RequestMapping(value="/buyDriver")
+	public String buyDriver(Model model, HttpSession session){
+		session.setAttribute("buyDriver", "buyDriver");
+		return "redirect:/drivers";
+	}
+	
+	@RequestMapping(value="/buyingDriver.{id}")
+	public String buyDriverById(Model model, HttpSession session,@PathVariable int id){
+		session.setAttribute("buyDriver", "");
+		System.out.println(id);
+		User user = null;
+		for(User u : this.userService.listUsers()){
+			if(u.getName().equals(session.getAttribute("userName"))){
+				user = u;
+				break;
+			}
+		}
+		
+		Driver driver = this.driverService.getDriverById(id);
+		user.getDrivers().add(driver);
+		user.removeMoney(driver.getPrice());
+		this.userService.updateUser(user);
+		System.out.println("size" + user.getDrivers().size());
+		
+		
+		return "redirect:/profile";
+	}
+	
+	@RequestMapping(value="/sellDriver.{id}")
+	public String sellDriver(Model model,HttpSession session,@PathVariable int id){
+		if(session.getAttribute("userName") == null || session.getAttribute("userName").equals("")){
+			model.addAttribute("firstLogin", "firstLogin");
+			return "profile";
+		}
+		else{
+			
+			User user = null;
+			for(User u : this.userService.listUsers()){
+				if(u.getName().equals(session.getAttribute("userName"))){
+					user = u;
+					break;
+				}
+			}
+			
+			Driver driver = this.driverService.getDriverById(id);
+			int i = 0;
+			for(Driver d : user.getDrivers()){
+				if(d.getName().equals(driver.getName())){
+					
+					break;
+				}
+				++i;
+			}
+			user.getDrivers().remove(i);
+			System.out.println(user.getDrivers().size());
+			user.addMoney(driver.getPrice());
+			this.userService.updateUser(user);
+			
+			
+			model.addAttribute("userName", user.getName());
+			model.addAttribute("yourMoney", user.getMoney());
+			model.addAttribute("yourPoints", user.getPoints());
+			model.addAttribute("yourDrivers", user.getDrivers());
+			model.addAttribute("yourTeams", user.getTeam());
+			return "profile";
+		}
+	}
+	
+	@RequestMapping(value="/sellTeam.{id}")
+	public String sellTeam(Model model,HttpSession session,@PathVariable int id){
+		
+		if(session.getAttribute("userName") == null || session.getAttribute("userName").equals("")){
+			model.addAttribute("firstLogin", "firstLogin");
+			return "profile";
+		}
+		else{
+			
+			User user = null;
+			for(User u : this.userService.listUsers()){
+				if(u.getName().equals(session.getAttribute("userName"))){
+					user = u;
+					break;
+				}
+			}
+			
+			Team team = this.teamService.getTeamById(id);
+			int i = 0;
+			for(Team t : user.getTeam()){
+				if(t.getName().equals(t.getName())){
+					break;
+				}
+				++i;
+			}
+			user.getTeam().remove(i);
+			System.out.println(user.getTeam().size());
+			user.addMoney(team.getPrice());
+			this.userService.updateUser(user);
+			
+			
+			model.addAttribute("userName", user.getName());
+			model.addAttribute("yourMoney", user.getMoney());
+			model.addAttribute("yourPoints", user.getPoints());
+			model.addAttribute("yourDrivers", user.getDrivers());
+			model.addAttribute("yourTeams", user.getTeam());
+			return "profile";
+		}
+	}
 	/*************************************************
 	 * 
 	 * DB-hez 
@@ -198,12 +396,13 @@ public class HomeController {
 	
 	@RequestMapping(value="/sizeOfLists")
 	public String sizeOfLists(Model model){
-		Race race1 = this.raceService.getRaceById(1);
-		System.out.println(race1.getResultOfDrivers().size());
-		for(Driver d: race1.getResultOfDrivers()){
-			System.out.println(d.getName());
-		}
 		
+		User user = this.userService.getUserById(1);
+		user.getDrivers().add(this.driverService.getDriverById(2));
+		user.getDrivers().add(this.driverService.getDriverById(3));
+		user.getTeam().add(this.teamService.getTeamById(4));
+		user.getTeam().add(this.teamService.getTeamById(3));
+		this.userService.updateUser(user);
 		
 		return "redirect:/";
 	}
@@ -260,6 +459,12 @@ public class HomeController {
 		this.raceService.addRace(race1);
 		this.raceService.addRace(race2);
 		this.raceService.addRace(race3);
+		
+		
+		User user1 = new User("firstUser","elso");
+		User user2 = new User("secondUser","masodik");
+		this.userService.addUser(user1);
+		this.userService.addUser(user2);
 		
 		return "redirect:/";
 	}

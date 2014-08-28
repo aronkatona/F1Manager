@@ -1,18 +1,4 @@
 <html>
-<script>
-var myVar=setInterval(function(){myTimer()},1000);
-var asd = $nextRaceDate
-function myTimer() {
-	var totalSec = asd;
-	var hours = parseInt( totalSec / 3600 ) % 24;
-	var minutes = parseInt( totalSec / 60 ) % 60;
-	var seconds = totalSec % 60;
-
-	document.getElementById("nextRaceTime").innerHTML = (hours < 10 ? "0" + hours : hours) + " h " + (minutes < 10 ? "0" + minutes : minutes) + " s " + (seconds  < 10 ? "0" + seconds : seconds) + " m";
-	asd = asd - 1;
-}
-</script>
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <meta http-equiv="content-language" content="hu">
@@ -26,27 +12,9 @@ function myTimer() {
 
 	<table class = "top" style="width:100%">
 		<tr style="height:80%">
-			<td colspan="2" id="nextRaceTime"> e+ .. </td>
+			<td colspan="2"> $nextRaceDate </td>
 			<td> 
-			#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
-			<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
-				#if($successSignup == "successSignup")
-					<font color="red">sikeres regisztracio</font>
-				#end
-				#if($notSuccessSignup == "notSuccessSignup")
-					<font color="red">mar van ilyen user, sry</font>
-				#end
-				</td>
-			#end
-			#if ($successLogin == "successLogin") ##sikeres belepes
-			Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
-			#end
-			#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
-			Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
-			#end
-			#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
-				<font id="onclick">Login</font> <font id="onclickSignup">Signup</font><font color="red">nincs ilyen user,vagy rossz jelszo</font></td> 
-			#end
+			</td>
 			
 			
 		</tr>
@@ -58,16 +26,27 @@ function myTimer() {
 		</tr>
 	</table>
 	
-	<div id="main">
-	#if($successLogin == "successLogin")
-		<p><font color = "red" size ="10">Udv az oldalon $userName</font></p>
-	#else
-		<p><font color = "red" size ="10">Udv az oldalon, jelentkezz vagy regisztralj be ma</font></p>
-	#end
-	</div>
-	
-                
-               
+	#if($firstLogin == "firstLogin")
+	<p><font color="red" size="30">Elobb jelentkezz be addig nem lathatod a profilod</p>
+    #else
+    	<p><font color="green" size="30">Szia $userName</p>            
+    	<p>penzed: $yourMoney</p>
+    	<p>pontok: $yourPoints</p>
+    	<p>pilotaid:
+    		#foreach($driver in $yourDrivers)
+    			<li><font color="red">$driver.getName() </font> <a color = "green" href="sellDriver.$driver.getId()">elad</a></li>
+    		#end
+    		
+    		#if($yourDrivers.size() < 2)
+    		<a href="buyDriver">pilota vasarlas</a>
+    		#end
+    	</p>	
+    	<p>csapataid: 
+    	#foreach($team in $yourTeams)
+    			<li><font color="red">$team.getName() </font> <a color = "green" href="sellTeam.$team.getId()">elad</a></li>
+    		#end
+    	</p>
+    #end          
 	
 	
 	<!--Contact Form -->

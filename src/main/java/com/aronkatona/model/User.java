@@ -26,21 +26,20 @@ public class User {
 	
 	private String name;
 	
+	private String password;
+	
 	private int money;
 	
 	private int points;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany( fetch = FetchType.EAGER)
 	@JoinColumn(name="userTeam_id")
 	private List<Team> team;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany( fetch = FetchType.EAGER)
 	@JoinColumn(name="userDriver_id")
 	private List<Driver> drivers;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="raceUser_id")
-	private List<Race> races;
 	
 	
 	
@@ -51,17 +50,23 @@ public class User {
 		
 	}
 	
+	public User(String name,String password){
+		this.name = name;
+		this.password = password;
+		this.money = 1000;
+		this.points = 0;
+		this.team = new ArrayList<>();
+		this.drivers = new ArrayList<>();
+	}
+	
 	public User(String name, int money, int points){
 		this.name = name;
 		this.money = money;
 		this.points = points;
 		this.team = new ArrayList<>();
 		this.drivers = new ArrayList<>();
-		this.races = new ArrayList<>();
 	}
 	
-
-
 	public int getId() {
 		return id;
 	}
@@ -86,6 +91,14 @@ public class User {
 		return money;
 	}
 	
+	public void addMoney(int money){
+		this.money+= money;
+	}
+	
+	public void removeMoney(int money){
+		this.money-=money;
+	}
+	
 	public void setPoints(int points){
 		this.points = points;
 	}
@@ -105,14 +118,17 @@ public class User {
 	public List<Driver> getDrivers(){
 		return drivers;
 	}
-	
-	
-	public List<Race> getRaces() {
-		return races;
+
+	public String getPassword() {
+		return password;
 	}
 
-	public void setRaces(List<Race> races) {
-		this.races = races;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public int getPoints() {
+		return points;
 	}
 
 	@Override
