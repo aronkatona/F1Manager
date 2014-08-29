@@ -19,7 +19,7 @@ var nextRaceDate = $nextRaceDate
 		<tr style="height:80%">
 			<td colspan="2" > <font size="10" color = "green">$nextRaceLocation</font> <font size="5" color = "green" id="nextRaceTime"></font>  </td>
 			<td colspan="2"> 
-				#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
+				#if( $successLogin == "" && $notSuccessLogin == "")  ##alapeset
 					<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
 					#if($successSignup == "successSignup")
 						<font color="red">sikeres regisztracio</font>

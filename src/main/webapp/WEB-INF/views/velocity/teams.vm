@@ -81,6 +81,38 @@ var userMoney = $userMoney
 		#end
 	</tbody> 
 </table>
+
+<!--Contact Form -->
+        <div id="contactdiv">
+            <form class="form" action = "/controllersF1Manager/login" method="get" id="contact">
+                <img src="./resources/button_cancel.png" class="img" id="cancel"/>	
+                <h3>Login</h3>
+                <hr/><br/>
+                <label>Name: </label>
+                <br/>
+                <input type="text" id="username" name="nameOfUser" placeholder="Name"/><br/>      
+                <input type="password" id="passwordLogin" name="passwordOfUser" placeholder="Password"/><br/>       
+                <input type="submit" id="login" value="Login"/>
+                <input type="button" id="cancel" value="Cancel"/>
+                <br/>
+            </form>
+        </div>
+        
+        <!--Signup Form -->
+        <div id="signupdiv">
+            <form class="form" action = "/controllersF1Manager/signup" method="get" id="register">
+                <img src="./resources/button_cancel.png" class="img" id="cancel"/>	
+                <h3>Signup</h3>
+                <hr/><br/>
+                <label>Name: </label>
+                <br/>
+                <input type="text" id="yourname" name="nameOfUser" placeholder="Name"/><br/> 
+                 <input type="password" id="passwordSignup" name="passwordOfUser" placeholder="Password"/><br/>          
+                <input type="submit" id="signup" value="Signup"/>
+                <input type="button" id="cancel" value="Cancel"/>
+                <br/>
+            </form>
+        </div>
 	
 </div>
 

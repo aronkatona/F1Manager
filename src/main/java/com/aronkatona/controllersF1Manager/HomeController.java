@@ -26,6 +26,7 @@ import com.aronkatona.model.Race;
 import com.aronkatona.model.Team;
 import com.aronkatona.model.User;
 import com.aronkatona.server.ServerThread;
+import com.aronkatona.server.SessionLoader;
 import com.aronkatona.service.DriverService;
 import com.aronkatona.service.RaceService;
 import com.aronkatona.service.TeamService;
@@ -45,6 +46,7 @@ public class HomeController {
 	private TeamService teamService;
 	private UserService userService;
 	private RaceService raceService;
+	
 	
 	@Autowired(required = true)
 	@Qualifier(value = "driverService")
@@ -76,13 +78,31 @@ public class HomeController {
 	
 	@RequestMapping(value="/welcome")
 	public String welcome(Model model,HttpSession session){
+		System.out.println("asd");
+		if(SessionLoader.getInstance()){
+			session.setAttribute("successLogin","");
+			session.setAttribute("notSuccessLogin","");
+			session.setAttribute("successSignup","");
+			session.setAttribute("notSuccessSignup","");
+		}
 		
 		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
-			model.addAttribute("notSuccessLogin", "alreadyLoggedin");
-			session.setAttribute("notSuccessLogin", "alreadyLoggedin");
+			//model.addAttribute("notSuccessLogin", "alreadyLoggedin");
+			//session.setAttribute("notSuccessLogin", "alreadyLoggedin");
+			model.addAttribute("successLogin", session.getAttribute("successLogin"));
+			model.addAttribute("notSuccessLogin", session.getAttribute("notSuccessLogin"));
+			model.addAttribute("successSignup", session.getAttribute("successSignup"));
+			model.addAttribute("notSuccessSignup", session.getAttribute("notSuccessSignup"));
 			model.addAttribute("userName", session.getAttribute("userName"));
 			return "welcome";
 		}
+		
+		
+		model.addAttribute("successLogin", session.getAttribute("successLogin"));
+		model.addAttribute("notSuccessLogin", session.getAttribute("notSuccessLogin"));
+		model.addAttribute("successSignup", session.getAttribute("successSignup"));
+		model.addAttribute("notSuccessSignup", session.getAttribute("notSuccessSignup"));
+
 		
 		return "welcome";
 	}
@@ -201,10 +221,18 @@ public class HomeController {
 		
 		
 		if(session.getAttribute("userName") == null || session.getAttribute("userName").equals("")){
+			model.addAttribute("successLogin", session.getAttribute("successLogin"));
+			model.addAttribute("notSuccessLogin", session.getAttribute("notSuccessLogin"));
+			model.addAttribute("successSignup", session.getAttribute("successSignup"));
+			model.addAttribute("notSuccessSignup", session.getAttribute("notSuccessSignup"));
 			model.addAttribute("firstLogin", "firstLogin");
 			return "profile";
 		}
 		else{
+			model.addAttribute("successLogin", session.getAttribute("successLogin"));
+			model.addAttribute("notSuccessLogin", session.getAttribute("notSuccessLogin"));
+			model.addAttribute("successSignup", session.getAttribute("successSignup"));
+			model.addAttribute("notSuccessSignup", session.getAttribute("notSuccessSignup"));
 			
 			User user = null;
 			for(User u : this.userService.listUsers()){
@@ -239,6 +267,7 @@ public class HomeController {
 		model.addAttribute("driverList", this.driverService.listDrivers());
 		
 		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
+			
 			User user = null;
 			for(User u : this.userService.listUsers()){
 				if(u.getName().equals(session.getAttribute("userName"))){
@@ -246,8 +275,15 @@ public class HomeController {
 					break;
 				}
 			}
-			model.addAttribute("userMoney",user.getMoney());
+			model.addAttribute("yourMoney", user.getMoney());
+			model.addAttribute("userName", session.getAttribute("userName"));
 		}
+		
+		model.addAttribute("successLogin", session.getAttribute("successLogin"));
+		model.addAttribute("notSuccessLogin", session.getAttribute("notSuccessLogin"));
+		model.addAttribute("successSignup", session.getAttribute("successSignup"));
+		model.addAttribute("notSuccessSignup", session.getAttribute("notSuccessSignup"));
+		
 		
 		return "drivers";
 	}
@@ -259,6 +295,8 @@ public class HomeController {
 		model.addAttribute("teamList", this.teamService.listTeams());
 		
 		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
+
+			
 			User user = null;
 			for(User u : this.userService.listUsers()){
 				if(u.getName().equals(session.getAttribute("userName"))){
@@ -266,10 +304,14 @@ public class HomeController {
 					break;
 				}
 			}
-			model.addAttribute("userMoney",user.getMoney());
+			model.addAttribute("yourMoney", user.getMoney());
+			model.addAttribute("userName", session.getAttribute("userName"));
 		}
 		
-		
+		model.addAttribute("successLogin", session.getAttribute("successLogin"));
+		model.addAttribute("notSuccessLogin", session.getAttribute("notSuccessLogin"));
+		model.addAttribute("successSignup", session.getAttribute("successSignup"));
+		model.addAttribute("notSuccessSignup", session.getAttribute("notSuccessSignup"));
 		
 		return "teams";
 	}
@@ -447,8 +489,12 @@ public class HomeController {
 	 * DB-hez 
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String index(Locale locale, Model model) {
+	public String index(Locale locale, Model model,HttpSession session) {
 		model.addAttribute("asd", "morning");
+	/*	session.setAttribute("successLogin","");
+		session.setAttribute("notSuccessLogin","");
+		session.setAttribute("successSignup","");
+		session.setAttribute("notSuccessSignup","");*/
 		return "index";
 	}
 	
