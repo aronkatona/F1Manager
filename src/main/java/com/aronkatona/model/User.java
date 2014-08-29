@@ -40,12 +40,6 @@ public class User {
 	@JoinColumn(name="userDriver_id")
 	private List<Driver> drivers;
 	
-	
-	
-	
-	
-	
-	
 	public User(){
 		
 	}
@@ -101,6 +95,10 @@ public class User {
 	
 	public void setPoints(int points){
 		this.points = points;
+	}
+	
+	public void addPoint(int point){
+		this.points += point;
 	}
 	
 	public void setTeam(List<Team> team){

@@ -1,6 +1,8 @@
 package com.aronkatona.controllersF1Manager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import com.aronkatona.model.Driver;
 import com.aronkatona.model.Race;
 import com.aronkatona.model.Team;
 import com.aronkatona.model.User;
+import com.aronkatona.server.ServerThread;
 import com.aronkatona.service.DriverService;
 import com.aronkatona.service.RaceService;
 import com.aronkatona.service.TeamService;
@@ -35,6 +38,8 @@ public class HomeController {
 
 	// private static final Logger logger =
 	// LoggerFactory.getLogger(HomeController.class);
+	
+	private ServerThread serverThread = ServerThread.getInstance();
 
 	private DriverService driverService;
 	private TeamService teamService;
@@ -45,24 +50,28 @@ public class HomeController {
 	@Qualifier(value = "driverService")
 	public void setDriverService(DriverService ds) {
 		this.driverService = ds;
+		this.serverThread.setDriverService(ds);
 	}
 	
 	@Autowired(required = true)
 	@Qualifier(value = "teamService")
 	public void setTeamService(TeamService ts) {
 		this.teamService = ts;
+		this.serverThread.setTeamService(ts);
 	}
 	
 	@Autowired(required = true)
 	@Qualifier(value = "userService")
 	public void setUserService(UserService us) {
 		this.userService = us;
+		this.serverThread.setUserService(us);
 	}
 	
 	@Autowired(required = true)
 	@Qualifier(value = "raceService")
 	public void setRaceService(RaceService rs) {
 		this.raceService = rs;
+		this.serverThread.setRaceService(rs);
 	}
 	
 	@RequestMapping(value="/welcome")
@@ -179,6 +188,8 @@ public class HomeController {
 				DateTime date2 = new DateTime(r.getDate());
 				Seconds seconds = Seconds.secondsBetween( date1, date2);
 				model.addAttribute("nextRaceDate", seconds.getSeconds() );
+				model.addAttribute("nextRaceLocation", r.getLocation());
+				System.out.println(r.getLocation());
 				break;
 			}
 		}
@@ -208,6 +219,14 @@ public class HomeController {
 			model.addAttribute("yourPoints", user.getPoints());
 			model.addAttribute("yourDrivers", user.getDrivers());
 			model.addAttribute("yourTeams", user.getTeam());
+			model.addAttribute("notEnoughMoneyToDriver",session.getAttribute("notEnoughMoneyToDriver"));
+			model.addAttribute("notEnoughMoneyToTeam",session.getAttribute("notEnoughMoneyToTeam"));
+			model.addAttribute("alreadyHaveThisTeam",session.getAttribute("alreadyHaveThisTeam"));
+			model.addAttribute("alreadyHaveThisDriver",session.getAttribute("alreadyHaveThisDriver"));
+			session.setAttribute("alreadyHaveThisDriver", "");
+			session.setAttribute("alreadyHaveThisTeam", "");
+			session.setAttribute("notEnoughMoneyToDriver", "");
+			session.setAttribute("notEnoughMoneyToTeam","");
 			return "profile";
 		}
 		
@@ -218,12 +237,40 @@ public class HomeController {
 		model.addAttribute("buyDriver",session.getAttribute("buyDriver"));
 		session.setAttribute("buyDriver", "");
 		model.addAttribute("driverList", this.driverService.listDrivers());
+		
+		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
+			User user = null;
+			for(User u : this.userService.listUsers()){
+				if(u.getName().equals(session.getAttribute("userName"))){
+					user = u;
+					break;
+				}
+			}
+			model.addAttribute("userMoney",user.getMoney());
+		}
+		
 		return "drivers";
 	}
 	
 	@RequestMapping(value="/teams")
-	public String teams(Model model){
+	public String teams(Model model,HttpSession session){
+		model.addAttribute("buyTeam",session.getAttribute("buyTeam"));
+		session.setAttribute("buyTeam", "");
 		model.addAttribute("teamList", this.teamService.listTeams());
+		
+		if(session.getAttribute("userName") != null && session.getAttribute("userName") !=""){
+			User user = null;
+			for(User u : this.userService.listUsers()){
+				if(u.getName().equals(session.getAttribute("userName"))){
+					user = u;
+					break;
+				}
+			}
+			model.addAttribute("userMoney",user.getMoney());
+		}
+		
+		
+		
 		return "teams";
 	}
 	
@@ -233,10 +280,15 @@ public class HomeController {
 		return "redirect:/drivers";
 	}
 	
-	@RequestMapping(value="/buyingDriver.{id}")
-	public String buyDriverById(Model model, HttpSession session,@PathVariable int id){
-		session.setAttribute("buyDriver", "");
-		System.out.println(id);
+	@RequestMapping(value="/buyTeam")
+	public String buyTeam(Model model, HttpSession session){
+		session.setAttribute("buyTeam","buyTeam");
+		return "redirect:/teams";
+	}
+	
+	@RequestMapping(value="/buyingTeam.{id}")
+	public String buyTeamById(Model model, HttpSession session, @PathVariable int id){
+		session.setAttribute("buyTeam","");
 		User user = null;
 		for(User u : this.userService.listUsers()){
 			if(u.getName().equals(session.getAttribute("userName"))){
@@ -245,11 +297,68 @@ public class HomeController {
 			}
 		}
 		
+		List<String> teamNames = new ArrayList<>();
+		for(Team team : user.getTeam()){
+			teamNames.add(team.getName()); 
+		}
+		
+		
+		Team team = this.teamService.getTeamById(id);
+		for(String s : teamNames){
+			if(s.equals(team.getName())){
+				session.setAttribute("alreadyHaveThisTeam","alreadyHaveThisTeam");
+				return "redirect:/profile";
+			}
+		}
+		
+		if(user.getMoney() > team.getPrice()){
+			user.getTeam().add(team);
+			user.removeMoney(team.getPrice());
+			session.setAttribute("notEnoughMoneyToTeam","");
+			this.userService.updateUser(user);
+		}
+		else{
+			session.setAttribute("notEnoughMoneyToTeam","notEnoughMoneyToTeam");
+		}
+		
+		
+		
+		return "redirect:/profile";
+	}
+	
+	@RequestMapping(value="/buyingDriver.{id}")
+	public String buyDriverById(Model model, HttpSession session,@PathVariable int id){
+		session.setAttribute("buyDriver", "");
+		User user = null;
+		for(User u : this.userService.listUsers()){
+			if(u.getName().equals(session.getAttribute("userName"))){
+				user = u;
+				break;
+			}
+		}
+		
+		List<String> driverNames = new ArrayList<>();
+		for(Driver driver: user.getDrivers()){
+			driverNames.add(driver.getName()); 
+		}
+		
 		Driver driver = this.driverService.getDriverById(id);
-		user.getDrivers().add(driver);
-		user.removeMoney(driver.getPrice());
-		this.userService.updateUser(user);
-		System.out.println("size" + user.getDrivers().size());
+		for(String s : driverNames){
+			if(s.equals(driver.getName())){
+				session.setAttribute("alreadyHaveThisDriver","alreadyHaveThisDriver");
+				return "redirect:/profile";
+			}
+		}
+		if(user.getMoney() > driver.getPrice()){
+			user.getDrivers().add(driver);
+			user.removeMoney(driver.getPrice());
+			session.setAttribute("notEnoughMoneyToDriver","");
+			this.userService.updateUser(user);
+		}
+		else{
+			session.setAttribute("notEnoughMoneyToDriver","notEnoughMoneyToDriver");
+		}
+		
 		
 		
 		return "redirect:/profile";
@@ -281,7 +390,6 @@ public class HomeController {
 				++i;
 			}
 			user.getDrivers().remove(i);
-			System.out.println(user.getDrivers().size());
 			user.addMoney(driver.getPrice());
 			this.userService.updateUser(user);
 			
@@ -315,7 +423,7 @@ public class HomeController {
 			Team team = this.teamService.getTeamById(id);
 			int i = 0;
 			for(Team t : user.getTeam()){
-				if(t.getName().equals(t.getName())){
+				if(t.getName().equals(team.getName())){
 					break;
 				}
 				++i;
@@ -340,7 +448,6 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Locale locale, Model model) {
-		System.out.println("index");
 		model.addAttribute("asd", "morning");
 		return "index";
 	}
@@ -379,17 +486,6 @@ public class HomeController {
 		race2.getResultOfTeams().add(this.teamService.getTeamById(4));
 		race2.getResultOfTeams().add(this.teamService.getTeamById(1));
 		this.raceService.updateRace(race2);
-		
-		/*Race race = this.raceService.getRaceById(1);
-		int tmp = 1;
-		for(Driver d: race.getResultOfDrivers()){
-			System.out.println(tmp++ + ". helyezes " + d.getName());
-		}
-		tmp = 1;
-		System.out.println("-----------");
-		for(Team t: race.getResultOfTeams()){
-			System.out.println(tmp++ + ".helyezés " + t.getName());
-		}*/
 		
 		return "redirect:/";
 	}

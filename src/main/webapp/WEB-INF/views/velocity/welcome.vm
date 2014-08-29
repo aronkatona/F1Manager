@@ -1,16 +1,6 @@
 <html>
 <script>
-var myVar=setInterval(function(){myTimer()},1000);
-var asd = $nextRaceDate
-function myTimer() {
-	var totalSec = asd;
-	var hours = parseInt( totalSec / 3600 ) % 24;
-	var minutes = parseInt( totalSec / 60 ) % 60;
-	var seconds = totalSec % 60;
-
-	document.getElementById("nextRaceTime").innerHTML = (hours < 10 ? "0" + hours : hours) + " h " + (minutes < 10 ? "0" + minutes : minutes) + " s " + (seconds  < 10 ? "0" + seconds : seconds) + " m";
-	asd = asd - 1;
-}
+var nextRaceDate = $nextRaceDate
 </script>
 
 <head>
@@ -18,6 +8,7 @@ function myTimer() {
 <meta http-equiv="content-language" content="hu">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="./resources/js/jquery_popup.js"></script>
+<script src="./resources/js/timeUntilNextRace.js"></script>
 <link href="./resources/css/style.css" rel="stylesheet" type="text/css" >
 	<title>F1 Manager</title>
 </head>
@@ -26,27 +17,28 @@ function myTimer() {
 
 	<table class = "top" style="width:100%">
 		<tr style="height:80%">
-			<td colspan="2" id="nextRaceTime"> e+ .. </td>
-			<td> 
-			#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
-			<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
-				#if($successSignup == "successSignup")
-					<font color="red">sikeres regisztracio</font>
-				#end
-				#if($notSuccessSignup == "notSuccessSignup")
+			<td colspan="2" > <font size="10" color = "green">$nextRaceLocation</font> <font size="5" color = "green" id="nextRaceTime"></font>  </td>
+			<td colspan="2"> 
+				#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
+					<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
+					#if($successSignup == "successSignup")
+						<font color="red">sikeres regisztracio</font>
+					#end
+					#if($notSuccessSignup == "notSuccessSignup")
 					<font color="red">mar van ilyen user, sry</font>
+					#end
 				#end
-				</td>
-			#end
-			#if ($successLogin == "successLogin") ##sikeres belepes
-			Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
-			#end
-			#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
-			Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
-			#end
-			#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
-				<font id="onclick">Login</font> <font id="onclickSignup">Signup</font><font color="red">nincs ilyen user,vagy rossz jelszo</font></td> 
-			#end
+				#if ($successLogin == "successLogin") ##sikeres belepes
+					Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+				#end
+				#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
+					Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+				#end
+				#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
+					<font id="onclick">Login</font> <font id="onclickSignup">Signup</font><font color="red">nincs ilyen user,vagy rossz jelszo</font>
+				#end
+			</td> 
+			
 			
 			
 		</tr>
@@ -61,8 +53,10 @@ function myTimer() {
 	<div id="main">
 	#if($successLogin == "successLogin")
 		<p><font color = "red" size ="10">Udv az oldalon $userName</font></p>
+		<p><font color = "black" size ="30">A jatek lenyeg a kovetkezo................................</font></p>
 	#else
 		<p><font color = "red" size ="10">Udv az oldalon, jelentkezz vagy regisztralj be ma</font></p>
+		<p><font color = "black" size ="30">A jatek lenyeg a kovetkezo................................</font></p>
 	#end
 	</div>
 	

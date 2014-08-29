@@ -1,9 +1,16 @@
 <html>
+<script>
+var nextRaceDate = $nextRaceDate
+var userMoney = $userMoney
+</script>
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <meta http-equiv="content-language" content="hu">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="./resources/js/jquery_popup.js"></script>
+<script src="./resources/js/timeUntilNextRace.js"></script>
+<script src="./resources/js/enoughMoney.js"></script>
 <link href="./resources/css/style.css" rel="stylesheet" type="text/css" >
 	<title>F1 Manager</title>
 </head>
@@ -12,27 +19,27 @@
 
 	<table class = "top" style="width:100%">
 		<tr style="height:80%">
-			<td colspan="2"> $nextRaceDate </td>
-			<td> 
-			#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
-			<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
-				#if($successSignup == "successSignup")
-					<font color="red">sikeres regisztracio</font>
-				#end
-				#if($notSuccessSignup == "notSuccessSignup")
+			<td colspan="2" > <font size="10" color = "green">$nextRaceLocation</font> <font size="5" color = "green" id="nextRaceTime"></font>  </td>
+			<td colspan="2"> 
+				#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
+					<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
+					#if($successSignup == "successSignup")
+						<font color="red">sikeres regisztracio</font>
+					#end
+					#if($notSuccessSignup == "notSuccessSignup")
 					<font color="red">mar van ilyen user, sry</font>
+					#end
 				#end
-				</td>
-			#end
-			#if ($successLogin == "successLogin") ##sikeres belepes
-			Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
-			#end
-			#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
-			Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
-			#end
-			#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
-				<font id="onclick">Login</font> <font id="onclickSignup">Signup</font><font color="red">nincs ilyen user,vagy rossz jelszo</font></td> 
-			#end
+				#if ($successLogin == "successLogin") ##sikeres belepes
+					Hi $userName, <a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+				#end
+				#if ($notSuccessLogin == "alreadyLoggedin") ##mar bevan loggolva, nincs multiloggolas
+					Hello megint $userName,<a id="logoutclick" href="/controllersF1Manager/logout">logout</a>
+				#end
+				#if ($notSuccessLogin == "notSuccessLogin") ##nincs ilyen user
+					<font id="onclick">Login</font> <font id="onclickSignup">Signup</font><font color="red">nincs ilyen user,vagy rossz jelszo</font>
+				#end
+			</td> 
 			
 			
 		</tr>
@@ -44,7 +51,11 @@
 		</tr>
 	</table>
 	
-	<p>csapatok</p>
+	#if(!$userMoney)
+		<p id="driverList"> csapatok </>
+	#else
+		<p id="driverList">Penzed: $userMoney</p>
+	#end
 	
 	<table id="teamTable"> 
 	<thead> 
@@ -52,6 +63,9 @@
     		<th>Name</th> 
     		<th>Price</th> 
     		<th>Points</th> 
+    		#if($buyTeam == "buyTeam")
+    			<th>Buy</th>
+    		#end
 		</tr> 
 	</thead> 
 	<tbody> 
@@ -60,6 +74,9 @@
 				<td>$team.getName()</td>
 				<td>$team.getPrice()</td>
 				<td>$team.getPoints()</td>
+				#if($buyTeam == "buyTeam")
+					<td><a color = "green" href="buyingTeam.$team.getId()" onclick="return myFunction($team.getPrice())">megveszem</a></td>
+				#end
 			</tr>
 		#end
 	</tbody> 

@@ -1,3 +1,7 @@
+body{
+	background-color:#C8C8C8;
+}
+
 div.all{
 width: 100%;
 height: auto;
@@ -36,7 +40,8 @@ background-color: #99FF66;
    padding:3px;
    color:green;
    cursor:pointer;
-	padding:5px 5px 5px 15px;
+   padding:5px 5px 5px 15px;
+   height: 70px;
    width:70px;
    color:white;
    background-color:#123456;
@@ -48,7 +53,8 @@ background-color: #99FF66;
    padding:3px;
    color:green;
    cursor:pointer;
-	padding:5px 5px 5px 15px;
+   padding:5px 5px 5px 15px;
+   height: 70px;
    width:70px;
    color:white;
    background-color:#123456;
