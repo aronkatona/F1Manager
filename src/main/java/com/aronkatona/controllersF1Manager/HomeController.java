@@ -219,6 +219,14 @@ public class HomeController {
 	@RequestMapping(value="/profile")
 	public String profile(Model model, HttpSession session){
 		
+		Race race = this.raceService.getRaceById(1);
+		
+		System.out.println(race.getResultOfDrivers().size());
+		
+		for(Driver d: race.getResultOfDrivers()){
+			System.out.println(d.getName());
+		}
+		
 		
 		if(session.getAttribute("userName") == null || session.getAttribute("userName").equals("")){
 			model.addAttribute("successLogin", session.getAttribute("successLogin"));
@@ -539,12 +547,17 @@ public class HomeController {
 	@RequestMapping(value="/sizeOfLists")
 	public String sizeOfLists(Model model){
 		
-		User user = this.userService.getUserById(1);
+		/*User user = this.userService.getUserById(1);
 		user.getDrivers().add(this.driverService.getDriverById(2));
 		user.getDrivers().add(this.driverService.getDriverById(3));
 		user.getTeam().add(this.teamService.getTeamById(4));
 		user.getTeam().add(this.teamService.getTeamById(3));
-		this.userService.updateUser(user);
+		this.userService.updateUser(user);*/
+		
+		Race race = this.raceService.getRaceById(1);
+		for(Driver driver : race.getResultOfDrivers()){
+			System.out.println(driver.getName());
+		}
 		
 		return "redirect:/";
 	}

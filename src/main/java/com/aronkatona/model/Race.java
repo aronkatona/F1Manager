@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 
@@ -31,11 +32,13 @@ public class Race {
 	//pilotak eredmenye
 	@ManyToMany( fetch = FetchType.EAGER)
 	@JoinColumn(name="resultOfDrivers_id")
+	@OrderColumn
 	private List<Driver> resultOfDrivers;
 	
 	//csapatok helyezese
 	@ManyToMany( fetch = FetchType.EAGER)
 	@JoinColumn(name="resultOfTeam_id")
+	@OrderColumn
 	private List<Team> resultOfTeams;
 	
 	public Race(){
