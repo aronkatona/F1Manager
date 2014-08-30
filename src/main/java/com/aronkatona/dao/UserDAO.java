@@ -12,4 +12,5 @@ public interface UserDAO {
 	public User getUserById(int id);
 	public void removeUser(int id);
 	public List<User> listUsersByTeamName(String teamName);
+	public User getUserByName(String userName);
 } 

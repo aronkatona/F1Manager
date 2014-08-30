@@ -53,6 +53,12 @@ public class UserServiceImpl implements UserService {
 		return this.userDAO.listUsersByTeamName(teamName);
 	}
 
+	@Override
+	@Transactional
+	public User getUserByName(String userName) {
+		return this.userDAO.getUserByName(userName);
+	}
+
 
 
 

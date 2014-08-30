@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -499,6 +500,7 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Locale locale, Model model,HttpSession session) {
 		model.addAttribute("asd", "morning");
+		
 	/*	session.setAttribute("successLogin","");
 		session.setAttribute("notSuccessLogin","");
 		session.setAttribute("successSignup","");
@@ -554,11 +556,12 @@ public class HomeController {
 		user.getTeam().add(this.teamService.getTeamById(3));
 		this.userService.updateUser(user);*/
 		
-		Race race = this.raceService.getRaceById(1);
-		for(Driver driver : race.getResultOfDrivers()){
-			System.out.println(driver.getName());
-		}
-		
+	    long startTime = System.currentTimeMillis();
+		User user = this.userService.getUserByName("testTime");
+		System.out.println(user.getName());
+		long endTime = System.currentTimeMillis();
+		long asd = endTime - startTime;
+		System.out.println("az eltelt ido :" + asd);
 		return "redirect:/";
 	}
 	

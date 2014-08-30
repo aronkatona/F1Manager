@@ -65,4 +65,14 @@ public class UserDAOImpl implements UserDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public User getUserByName(String userName) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from User where name = :userName)");
+		query.setParameter("userName", userName);
+		List<User> userList = query.list();
+		return userList.get(0);
+	}
+
 } 
