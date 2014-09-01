@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +41,9 @@ import com.aronkatona.service.UserService;
 @SessionAttributes("notSuccessLogin")
 public class HomeController {
 
-	// private static final Logger logger =
-	// LoggerFactory.getLogger(HomeController.class);
+
+	
+
 	
 	private ServerThread serverThread = ServerThread.getInstance();
 
@@ -78,8 +82,10 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/welcome")
-	public String welcome(Model model,HttpSession session){
-		System.out.println("asd");
+	public String welcome(Locale locale , Model model,HttpSession session,HttpServletRequest request){
+		System.out.println(locale);
+		
+		
 		if(SessionLoader.getInstance()){
 			session.setAttribute("successLogin","");
 			session.setAttribute("notSuccessLogin","");
@@ -136,6 +142,10 @@ public class HomeController {
 			model.addAttribute("userName", user.getName());
 			model.addAttribute("successLogin", "successLogin");
 			session.setAttribute("successLogin", "successLogin");
+			
+
+			System.out.println("A " + user.getName() + " bejelentkezett!");
+		
 			
 			//if(page.equals("welcome"))	return "welcome";
 			//if(page.equals("profile")) return "profile";
@@ -202,9 +212,10 @@ public class HomeController {
 	@ModelAttribute
 	public Date raceTime(Model model){
 		Date actDate = new Date();
-		
+		boolean isNextRace = false;
 		for(Race r : this.raceService.listRaces()){
 			if(r.getDate().after(actDate)){
+				isNextRace = true;
 				DateTime date1 = new DateTime(actDate);
 				DateTime date2 = new DateTime(r.getDate());
 				Seconds seconds = Seconds.secondsBetween( date1, date2);
@@ -214,20 +225,18 @@ public class HomeController {
 				break;
 			}
 		}
+		System.out.println("nextRace?: " + isNextRace);
+		if(!isNextRace){
+			System.out.println("nincs next race");
+			model.addAttribute("nextRaceLocation","notNextRace");
+		}
+		
 		return null;
 	}
 	
 	@RequestMapping(value="/profile")
 	public String profile(Model model, HttpSession session){
-		
-		Race race = this.raceService.getRaceById(1);
-		
-		System.out.println(race.getResultOfDrivers().size());
-		
-		for(Driver d: race.getResultOfDrivers()){
-			System.out.println(d.getName());
-		}
-		
+				
 		
 		if(session.getAttribute("userName") == null || session.getAttribute("userName").equals("")){
 			model.addAttribute("successLogin", session.getAttribute("successLogin"));
@@ -327,7 +336,7 @@ public class HomeController {
 	
 	@RequestMapping(value="/buyDriver")
 	public String buyDriver(Model model, HttpSession session){
-		session.setAttribute("buyDriver", "buyDriver");
+		session.setAttribute("buyDriver", "buyDriver");		
 		return "redirect:/drivers";
 	}
 	
@@ -500,6 +509,7 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Locale locale, Model model,HttpSession session) {
 		model.addAttribute("asd", "morning");
+		System.out.println(locale);
 		
 	/*	session.setAttribute("successLogin","");
 		session.setAttribute("notSuccessLogin","");
@@ -549,19 +559,10 @@ public class HomeController {
 	@RequestMapping(value="/sizeOfLists")
 	public String sizeOfLists(Model model){
 		
-		/*User user = this.userService.getUserById(1);
-		user.getDrivers().add(this.driverService.getDriverById(2));
-		user.getDrivers().add(this.driverService.getDriverById(3));
-		user.getTeam().add(this.teamService.getTeamById(4));
-		user.getTeam().add(this.teamService.getTeamById(3));
-		this.userService.updateUser(user);*/
-		
-	    long startTime = System.currentTimeMillis();
-		User user = this.userService.getUserByName("testTime");
-		System.out.println(user.getName());
-		long endTime = System.currentTimeMillis();
-		long asd = endTime - startTime;
-		System.out.println("az eltelt ido :" + asd);
+		List<Driver> drivers = this.raceService.getRaceById(1).getResultOfDrivers();
+		for(Driver driver : drivers){
+			System.out.println(driver.getName());
+		}
 		return "redirect:/";
 	}
 	

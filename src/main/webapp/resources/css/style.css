@@ -152,3 +152,7 @@ color: white;
 a.menuLink:hover{
 color: red;
 }
+
+table.driverTable{
+	border: 3px solid black;
+}

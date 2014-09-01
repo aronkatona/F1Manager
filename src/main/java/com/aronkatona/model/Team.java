@@ -81,7 +81,9 @@ public class Team {
 		return points;
 	}
 	
-	
+	public void addPoint(int points){
+		this.points = points;
+	}
 	
 	public int getPrice() {
 		return price;

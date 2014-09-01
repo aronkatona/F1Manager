@@ -7,8 +7,9 @@
 	Hello world!  
 </h1>
 
-<P>  The time on the server is $asd. </P>
-
+<P>  The time on the server isd $asd. </P>
+<a href="?locale=hu">magyar</a><a href="?locale=en">english</a>
+<p>#springMessageText("message.title" "hi")</p>
 <a href="/controllersF1Manager/addDriversTeamsToRace">add DriversTeams to Race </a></br>
 <a href="/controllersF1Manager/addTeamDriverRace">add TeamDriverRace </a></br>
 <a href="/controllersF1Manager/sizeOfLists">size of lists </a></br>

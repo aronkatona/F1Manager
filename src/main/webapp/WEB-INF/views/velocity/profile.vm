@@ -17,7 +17,14 @@ var nextRaceDate = $nextRaceDate
 
 	<table class = "top" style="width:100%">
 		<tr style="height:80%">
-			<td colspan="2" > <font size="10" color = "green">$nextRaceLocation</font> <font size="5" color = "green" id="nextRaceTime"></font>  </td>
+			#if($nextRaceLocation != "notNextRace")
+				<td colspan="2" > <font size="10" color = "green">$nextRaceLocation</font>
+			  	<font size="5" color = "green" id="nextRaceTime"></font>  </td>
+			#else
+				<td colspan="2" > <font size="10" color = "green">Nincs kovetkezo futam</font>
+			  	<font size="5" color = "green"> </font>  </td>
+			#end
+			<td><a href="?locale=hu"><img src="./resources/img/hunFlag.png" width = "50px"></img></a><a href="?locale=en"><img src="./resources/img/gbFlag.jpg" width = "50px"></img></a></td>
 			<td colspan="2"> 
 				#if( (!$successLogin && !$notSuccessLogin) || ($successLogin == "" && $notSuccessLogin == "") ) ##alapeset
 					<font id="onclick">Login</font> <font id="onclickSignup">Signup</font>
@@ -43,10 +50,10 @@ var nextRaceDate = $nextRaceDate
 			
 		</tr>
 		<tr>
-			<td class = "menu"><b><a class = "menuLink" href="welcome">Home</a></b></td>
-			<td class = "menu"><b><a class = "menuLink" href="profile">Profile</a></b></td>
-			<td class = "menu"><b><a class = "menuLink" href="drivers">Drivers</a></b></td>
-			<td class = "menu"><b><a class = "menuLink" href="teams">Teams</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="welcome">#springMessageText("message.homePage" "Home")</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="profile">#springMessageText("message.profilePage" "Profile")</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="drivers">#springMessageText("message.driversPage" "Drivers")</a></b></td>
+			<td class = "menu"><b><a class = "menuLink" href="teams">#springMessageText("message.teamsPage" "Teams")</a></b></td>
 		</tr>
 	</table>
 	

@@ -91,6 +91,10 @@ public class Driver {
 	public void setPoints(int points) {
 		this.points = points;
 	}
+	
+	public void addPoint(int points){
+		this.points = points;
+	}
 
 	public void setTeam(Team team) {
 		this.team = team;

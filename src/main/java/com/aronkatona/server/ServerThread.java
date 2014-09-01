@@ -19,6 +19,7 @@ import com.aronkatona.service.UserService;
 public class ServerThread extends Thread {
 
 	private static ServerThread instance = null;
+	private static final int PRICEOFPOINT = 200;
 	
 	private DriverService driverService;
 	private TeamService teamService;
@@ -63,25 +64,32 @@ public class ServerThread extends Thread {
 					givePointsToUsers(r);
 				}
 			}
+			
 		}
 	}
 	
 	public void givePointsToUsers(Race race){
 		List<DriverPoints> driverPoints = resultOfDrivers(race);
-		List<TeamPoints> teamPoints = resultOfTeams(race);
-		
-		for(Driver driver : race.getResultOfDrivers()){
-			System.out.println(driver.getName());
-		}
-		
+	    List<TeamPoints> teamPoints = resultOfTeams(race);
+
 		List<User> users = this.userService.listUsers();
+		
+		Driver driver1 = null;
+		Driver driver2 = null;
+		Team team1 = null;
+		Team team2 = null;
+		
+		int driver1Point = 0;
+		int driver2Point = 0;
+		int team1Point = 0;
+		int team2Point = 0;
 		
 		for(User user : users){
 			if(user.getDrivers().size() == 2 && user.getTeam().size() == 2){
-				Driver driver1 = user.getDrivers().get(0);
-				Driver driver2 = user.getDrivers().get(1);
-				Team team1 = user.getTeam().get(0);
-				Team team2 = user.getTeam().get(1);
+			    driver1 = user.getDrivers().get(0);
+				driver2 = user.getDrivers().get(1);
+				team1 = user.getTeam().get(0);
+				team2 = user.getTeam().get(1);
 				
 				boolean driver1Done = false;
 				boolean driver2Done = false; 
@@ -90,10 +98,14 @@ public class ServerThread extends Thread {
 				for(DriverPoints dP : driverPoints){
 					if(dP.getName().equals(driver1.getName())){
 						user.addPoint(dP.getPoint());
+						user.addMoney(dP.getPoint() * PRICEOFPOINT);
+						driver1Point = dP.getPoint();
 						driver1Done = true;
 					}
 					else if(dP.getName().equals(driver2.getName())){
 						user.addPoint(dP.getPoint());
+						user.addMoney(dP.getPoint() * PRICEOFPOINT);
+						driver2Point = dP.getPoint();
 						driver2Done = true;
 					}
 					
@@ -105,10 +117,14 @@ public class ServerThread extends Thread {
 				for(TeamPoints tP : teamPoints){
 					if(tP.getName().equals(team1.getName())){
 						user.addPoint(tP.getPoint());
+						user.addMoney(tP.getPoint() * PRICEOFPOINT);
+						team1Point = tP.getPoint();
 						team1Done = true;
 					}
 					else if(tP.getName().equals(team2.getName())){
 						user.addPoint(tP.getPoint());
+						user.addMoney(tP.getPoint() * PRICEOFPOINT);
+						team2Point = tP.getPoint();
 						team2Done = true;
 					}
 					
@@ -125,6 +141,14 @@ public class ServerThread extends Thread {
 			
 		}
 		
+			driver1.addPoint(driver1Point);
+			driver2.addPoint(driver2Point);
+			team1.addPoint(team1Point);
+			team2.addPoint(team2Point);
+			this.driverService.updateDriver(driver1);
+			this.driverService.updateDriver(driver2);
+			this.teamService.updateTeam(team1);
+			this.teamService.updateTeam(team2);
 	}
 	
 	public List<DriverPoints> resultOfDrivers(Race race){
