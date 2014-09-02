@@ -1,6 +1,7 @@
 <html>
 <script>
 var nextRaceDate = $nextRaceDate
+var nextRaceLocation = $nextRaceLocation
 </script>
 
 <head>

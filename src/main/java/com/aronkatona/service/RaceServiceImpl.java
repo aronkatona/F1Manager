@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aronkatona.dao.RaceDAO;
-import com.aronkatona.model.Driver;
 import com.aronkatona.model.Race;
 
 @Service

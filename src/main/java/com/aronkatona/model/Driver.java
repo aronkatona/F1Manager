@@ -87,6 +87,10 @@ public class Driver {
 	public int getPrice() {
 		return price;
 	}
+	
+	public void addPrice(int price){
+		this.price+=price;
+	}
 
 	public void setPoints(int points) {
 		this.points = points;

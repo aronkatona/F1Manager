@@ -62,12 +62,47 @@ public class ServerThread extends Thread {
 						e.printStackTrace();
 					}
 					givePointsToUsers(r);
+					givePointsToDriversTeams(r);
 				}
 			}
 			
 		}
 	}
 	
+
+	private void givePointsToDriversTeams(Race race) {
+		System.out.println("givePointsToDriversTeams" + race.getId());
+		
+		List<DriverPoints> driverPoints = resultOfDrivers(race);
+	
+		for(Driver driver : this.driverService.listDrivers()){
+			for(DriverPoints dP : driverPoints){
+				if(driver.getName().equals(dP.getName())){
+					driver.addPoint(dP.getPoint());
+					driver.addPrice(dP.getPoint() * PRICEOFPOINT/2);
+					this.driverService.updateDriver(driver);
+					break;
+				}
+			}
+		}
+		
+		List<TeamPoints> teamPoints = resultOfTeams(race);
+		
+		for(Team team : this.teamService.listTeams()){
+			for(TeamPoints tP : teamPoints){
+				if(team.getName().equals(tP.getName())){
+					team.addPoint(tP.getPoint());
+					team.addPrice(tP.getPoint() * PRICEOFPOINT/2);
+					this.teamService.updateTeam(team);
+					break;
+				}
+			}
+		}
+		System.out.println("givePointsToDriversTeams" + race.getId());
+				
+	}
+
+
 	public void givePointsToUsers(Race race){
 		List<DriverPoints> driverPoints = resultOfDrivers(race);
 	    List<TeamPoints> teamPoints = resultOfTeams(race);
@@ -79,10 +114,7 @@ public class ServerThread extends Thread {
 		Team team1 = null;
 		Team team2 = null;
 		
-		int driver1Point = 0;
-		int driver2Point = 0;
-		int team1Point = 0;
-		int team2Point = 0;
+	
 		
 		for(User user : users){
 			if(user.getDrivers().size() == 2 && user.getTeam().size() == 2){
@@ -99,13 +131,11 @@ public class ServerThread extends Thread {
 					if(dP.getName().equals(driver1.getName())){
 						user.addPoint(dP.getPoint());
 						user.addMoney(dP.getPoint() * PRICEOFPOINT);
-						driver1Point = dP.getPoint();
 						driver1Done = true;
 					}
 					else if(dP.getName().equals(driver2.getName())){
 						user.addPoint(dP.getPoint());
 						user.addMoney(dP.getPoint() * PRICEOFPOINT);
-						driver2Point = dP.getPoint();
 						driver2Done = true;
 					}
 					
@@ -118,13 +148,11 @@ public class ServerThread extends Thread {
 					if(tP.getName().equals(team1.getName())){
 						user.addPoint(tP.getPoint());
 						user.addMoney(tP.getPoint() * PRICEOFPOINT);
-						team1Point = tP.getPoint();
 						team1Done = true;
 					}
 					else if(tP.getName().equals(team2.getName())){
 						user.addPoint(tP.getPoint());
 						user.addMoney(tP.getPoint() * PRICEOFPOINT);
-						team2Point = tP.getPoint();
 						team2Done = true;
 					}
 					
@@ -141,14 +169,7 @@ public class ServerThread extends Thread {
 			
 		}
 		
-			driver1.addPoint(driver1Point);
-			driver2.addPoint(driver2Point);
-			team1.addPoint(team1Point);
-			team2.addPoint(team2Point);
-			this.driverService.updateDriver(driver1);
-			this.driverService.updateDriver(driver2);
-			this.teamService.updateTeam(team1);
-			this.teamService.updateTeam(team2);
+
 	}
 	
 	public List<DriverPoints> resultOfDrivers(Race race){

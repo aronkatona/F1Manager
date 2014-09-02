@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.aronkatona.model.User;
-import com.aronkatona.model.Team;
 
 @Repository
 public class UserDAOImpl implements UserDAO {

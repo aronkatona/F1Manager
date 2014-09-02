@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.aronkatona.model.Driver;
-import com.aronkatona.model.Team;
 
 @Repository
 public class DriverDAOImpl implements DriverDAO {

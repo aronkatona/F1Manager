@@ -92,6 +92,10 @@ public class Team {
 	public void setPrice(int price) {
 		this.price = price;
 	}
+	
+	public void addPrice(int price){
+		this.price+= price;
+	}
 
 	@Override
 	public String toString(){

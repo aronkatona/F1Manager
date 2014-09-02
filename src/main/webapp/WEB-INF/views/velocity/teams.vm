@@ -2,6 +2,7 @@
 <script>
 var nextRaceDate = $nextRaceDate
 var userMoney = $userMoney
+var nextRaceLocation = $nextRaceLocation
 </script>
 
 <head>
@@ -82,7 +83,7 @@ var userMoney = $userMoney
 				<td>$team.getName()</td>
 				<td>$team.getPrice()</td>
 				<td>$team.getPoints()</td>
-				#if($buyTeam == "buyTeam")
+				#if($buyTeam == "buyTeam" && $team1Name != $team.getName())
 					<td><a color = "green" href="buyingTeam.$team.getId()" onclick="return myFunction($team.getPrice())">megveszem</a></td>
 				#end
 			</tr>
